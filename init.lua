@@ -342,16 +342,15 @@ require('lazy').setup({
               }),
               previewer = conf.file_previewer({}),
               sorter = conf.generic_sorter({}),
+              initial_mode = 'normal',
               attach_mappings = function(prompt_buffer_number, map)
                 -- The keymap you need
                 map("n", "dd", function()
                   local state = require("telescope.actions.state")
                   local selected_entry = state.get_selected_entry()
                   local current_picker = state.get_current_picker(prompt_buffer_number)
-              print(selected_entry.index)
 
                   -- This is the line you need to remove the entry
-                  -- harpoon:list():remove_at(selected_entry.index)
                   table.remove(harpoon_files.items, selected_entry.index)
                   current_picker:refresh(make_finder())
                 end)
