@@ -343,19 +343,21 @@ require('lazy').setup({
               previewer = conf.file_previewer({}),
               sorter = conf.generic_sorter({}),
               attach_mappings = function(prompt_buffer_number, map)
-            -- The keymap you need
-            map("n", "dd", function()
-              local state = require("telescope.actions.state")
-              local selected_entry = state.get_selected_entry()
-              local current_picker = state.get_current_picker(prompt_buffer_number)
+                -- The keymap you need
+                map("n", "dd", function()
+                  local state = require("telescope.actions.state")
+                  local selected_entry = state.get_selected_entry()
+                  local current_picker = state.get_current_picker(prompt_buffer_number)
+              print(selected_entry.index)
 
-              -- This is the line you need to remove the entry
-              harpoon:list():remove(selected_entry)
-              current_picker:refresh(make_finder())
-            end)
+                  -- This is the line you need to remove the entry
+                  -- harpoon:list():remove_at(selected_entry.index)
+                  table.remove(harpoon_files.items, selected_entry.index)
+                  current_picker:refresh(make_finder())
+                end)
 
-            return true
-          end,
+              return true
+            end,
           }):find()
       end
 
@@ -372,8 +374,8 @@ require('lazy').setup({
       vim.keymap.set("n", "<C-s>", function() harpoon:list():select(4) end)
 
       -- Toggle previous & next buffers stored within Harpoon list
-      vim.keymap.set("n", "J", function() harpoon:list():prev() end)
-      vim.keymap.set("n", "K", function() harpoon:list():next() end)
+      vim.keymap.set("n", "H", function() harpoon:list():prev() end)
+      vim.keymap.set("n", "L", function() harpoon:list():next() end)
     end
   }
 
@@ -666,6 +668,9 @@ local on_attach = function(_, bufnr)
   vim.api.nvim_buf_create_user_command(bufnr, 'Format', function(_)
     vim.lsp.buf.format()
   end, { desc = 'Format current buffer with LSP' })
+
+  -- set signature help
+  vim.api.nvim_buf_set_keymap(bufnr, 'i', '<C-k>', '<cmd>lua vim.lsp.buf.signature_help()<CR>', { noremap = true, silent = true})
 end
 
 -- document existing key chains
@@ -763,7 +768,7 @@ cmp.setup {
     ['<C-p>'] = cmp.mapping.select_prev_item(),
     ['<C-b>'] = cmp.mapping.scroll_docs(-4),
     ['<C-f>'] = cmp.mapping.scroll_docs(4),
-    ['<C-Space>'] = cmp.mapping.complete {},
+    ['<S-Space>'] = cmp.mapping.complete {},
     ['<CR>'] = cmp.mapping.confirm {
       behavior = cmp.ConfirmBehavior.Replace,
       select = true,
@@ -799,8 +804,13 @@ cmp.setup {
 
 
 -- My options
-vim.keymap.set('n', '<leader>j', '<C-o>')
-vim.keymap.set('n', '<leader>k', '<C-i>')
+vim.keymap.set('n', '<leader>J', '<C-o>')
+vim.keymap.set('n', '<leader>K', '<C-i>')
+
+vim.api.nvim_set_keymap("n", "J", ":m .+1<CR>==", { noremap = true, silent = true}) -- move line down(n)
+vim.api.nvim_set_keymap("n", "K", ":m .-2<CR>==", { noremap = true, silent = true}) -- move line up(n)
+vim.api.nvim_set_keymap("v", "J", ":m '>+1<CR>gv=gv", { noremap = true, silent = true}) -- move line down(v)
+vim.api.nvim_set_keymap("v", "K", ":m '<-2<CR>gv=gv", { noremap = true, silent = true}) -- move line down(v)
 
 vim.api.nvim_set_keymap('i', 'kj', '<Esc>', { noremap = true, silent = true });
 vim.api.nvim_set_keymap('n', 'ff', ':w<CR>', { noremap = true, silent = true })
