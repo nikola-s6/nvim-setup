@@ -47,7 +47,7 @@ vim.g.maplocalleader = ' '
 -- disable netrw at the very start of your init.lua
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
-vim.wo.relativenumber = true;
+vim.wo.relativenumber = true
 
 -- [[ Install `lazy.nvim` plugin manager ]]
 --    https://github.com/folke/lazy.nvim
@@ -265,88 +265,87 @@ require('lazy').setup({
   },
 
   {
-    "nvim-tree/nvim-tree.lua",
-    version = "*",
+    'nvim-tree/nvim-tree.lua',
+    version = '*',
     lazy = false,
     dependencies = {
-      "nvim-tree/nvim-web-devicons",
+      'nvim-tree/nvim-web-devicons',
     },
     config = function()
-      require("nvim-tree").setup {
-        view = { relativenumber = true,
-          width = 30,
-        },
+      require('nvim-tree').setup {
+        view = { relativenumber = true, width = 30 },
         renderer = {
           group_empty = true,
         },
         filters = {
           dotfiles = true,
         },
-        on_attach = function (bufnr)
-          local api = require "nvim-tree.api"
+        on_attach = function(bufnr)
+          local api = require 'nvim-tree.api'
 
           local function opts(desc)
-            return { desc = "nvim-tree: " .. desc, buffer = bufnr, noremap = true, silent = true, nowait = true }
+            return { desc = 'nvim-tree: ' .. desc, buffer = bufnr, noremap = true, silent = true, nowait = true }
           end
 
           api.config.mappings.default_on_attach(bufnr)
 
-          vim.keymap.set('n', 'h', api.node.navigate.parent_close, opts('Close Directory'))
-          vim.keymap.set('n', 'l', api.node.open.edit, opts('Open'))
+          vim.keymap.set('n', 'h', api.node.navigate.parent_close, opts 'Close Directory')
+          vim.keymap.set('n', 'l', api.node.open.edit, opts 'Open')
           -- vim.keymap.set('n', 't', api.node.open.tab, opts('Open: New Tab'))
-          vim.keymap.set('n', 'v', api.node.open.vertical, opts('Open: Vertical Split'))
-        end
+          vim.keymap.set('n', 'v', api.node.open.vertical, opts 'Open: Vertical Split')
+        end,
       }
     end,
   },
   {
     'windwp/nvim-autopairs',
-    event = "InsertEnter",
-    config = true
+    event = 'InsertEnter',
+    config = true,
   },
   {
-    "ThePrimeagen/harpoon",
-    branch = "harpoon2",
-    dependencies = { "nvim-lua/plenary.nvim", "nvim-telescope/telescope.nvim" },
+    'ThePrimeagen/harpoon',
+    branch = 'harpoon2',
+    dependencies = { 'nvim-lua/plenary.nvim', 'nvim-telescope/telescope.nvim' },
     config = function()
-      local harpoon = require("harpoon")
+      local harpoon = require 'harpoon'
 
       -- REQUIRED
       harpoon:setup()
       -- REQUIRED
 
       -- basic telescope configuration
-      local conf = require("telescope.config").values
+      local conf = require('telescope.config').values
       local function toggle_telescope(harpoon_files)
-          local file_paths = {}
+        local file_paths = {}
+        for _, item in ipairs(harpoon_files.items) do
+          table.insert(file_paths, item.value)
+        end
+
+        local make_finder = function()
+          local paths = {}
+
           for _, item in ipairs(harpoon_files.items) do
-             table.insert(file_paths, item.value)
+            table.insert(paths, item.value)
           end
 
-          local make_finder = function()
-            local paths = {}
+          return require('telescope.finders').new_table {
+            results = paths,
+          }
+        end
 
-            for _, item in ipairs(harpoon_files.items) do
-              table.insert(paths, item.value)
-            end
-
-            return require("telescope.finders").new_table({
-              results = paths,
-            })
-          end
-
-         require("telescope.pickers").new({}, {
-              prompt_title = "Harpoon",
-              finder = require("telescope.finders").new_table({
-                  results = file_paths,
-              }),
-              previewer = conf.file_previewer({}),
-              sorter = conf.generic_sorter({}),
+        require('telescope.pickers')
+            .new({}, {
+              prompt_title = 'Harpoon',
+              finder = require('telescope.finders').new_table {
+                results = file_paths,
+              },
+              previewer = conf.file_previewer {},
+              sorter = conf.generic_sorter {},
               initial_mode = 'normal',
               attach_mappings = function(prompt_buffer_number, map)
                 -- The keymap you need
-                map("n", "dd", function()
-                  local state = require("telescope.actions.state")
+                map('n', 'dd', function()
+                  local state = require 'telescope.actions.state'
                   local selected_entry = state.get_selected_entry()
                   local current_picker = state.get_current_picker(prompt_buffer_number)
 
@@ -355,28 +354,62 @@ require('lazy').setup({
                   current_picker:refresh(make_finder())
                 end)
 
-              return true
-            end,
-          }):find()
+                return true
+              end,
+            })
+            :find()
       end
 
-      vim.keymap.set("n", "<leader>f", function() toggle_telescope(harpoon:list()) end,
-          { desc = "Open harpoon window" })
+      vim.keymap.set('n', '<leader>f', function()
+        toggle_telescope(harpoon:list())
+      end, { desc = 'Open harpoon window' })
 
-      vim.keymap.set("n", "<leader>ha", function() harpoon:list():add() end)
-      vim.keymap.set("n", "<leader>hd", function() harpoon:list():remove() end)
-      vim.keymap.set("n", "<C-e>", function() harpoon.ui:toggle_quick_menu(harpoon:list()) end)
+      vim.keymap.set('n', '<leader>ha', function()
+        harpoon:list():add()
+      end)
+      vim.keymap.set('n', '<leader>hd', function()
+        harpoon:list():remove()
+      end)
+      vim.keymap.set('n', '<C-e>', function()
+        harpoon.ui:toggle_quick_menu(harpoon:list())
+      end)
 
-      vim.keymap.set("n", "<C-h>", function() harpoon:list():select(1) end)
-      vim.keymap.set("n", "<C-t>", function() harpoon:list():select(2) end)
-      vim.keymap.set("n", "<C-n>", function() harpoon:list():select(3) end)
-      vim.keymap.set("n", "<C-s>", function() harpoon:list():select(4) end)
+      vim.keymap.set('n', '<C-h>', function()
+        harpoon:list():select(1)
+      end)
+      vim.keymap.set('n', '<C-t>', function()
+        harpoon:list():select(2)
+      end)
+      vim.keymap.set('n', '<C-n>', function()
+        harpoon:list():select(3)
+      end)
+      vim.keymap.set('n', '<C-s>', function()
+        harpoon:list():select(4)
+      end)
 
       -- Toggle previous & next buffers stored within Harpoon list
-      vim.keymap.set("n", "H", function() harpoon:list():prev() end)
-      vim.keymap.set("n", "L", function() harpoon:list():next() end)
-    end
-  }
+      vim.keymap.set('n', 'H', function()
+        harpoon:list():prev()
+      end)
+      vim.keymap.set('n', 'L', function()
+        harpoon:list():next()
+      end)
+    end,
+  },
+  {
+    'jose-elias-alvarez/null-ls.nvim',
+    dependencies = { 'nvim-lua/plenary.nvim' },
+    config = function()
+      local null_ls = require 'null-ls'
+      local formatting = null_ls.builtins.formatting
+      null_ls.setup {
+        sources = {
+          formatting.prettierd,
+          formatting.stylua,
+        },
+      }
+    end,
+  },
 
   -- NOTE: Next Step on Your Neovim Journey: Add/Configure additional "plugins" for kickstart
   --       These are some example plugins that I've included in the kickstart repository.
@@ -669,7 +702,8 @@ local on_attach = function(_, bufnr)
   end, { desc = 'Format current buffer with LSP' })
 
   -- set signature help
-  vim.api.nvim_buf_set_keymap(bufnr, 'i', '<C-k>', '<cmd>lua vim.lsp.buf.signature_help()<CR>', { noremap = true, silent = true})
+  vim.api.nvim_buf_set_keymap(bufnr, 'i', '<C-k>', '<cmd>lua vim.lsp.buf.signature_help()<CR>',
+    { noremap = true, silent = true })
 end
 
 -- document existing key chains
@@ -705,11 +739,11 @@ require('mason-lspconfig').setup()
 --  define the property 'filetypes' to the map in question.
 local servers = {
   -- clangd = {},
-  -- gopls = {},
+  gopls = {},
   -- pyright = {},
   -- rust_analyzer = {},
-  -- tsserver = {},
-  -- html = { filetypes = { 'html', 'twig', 'hbs'} },
+  tsserver = {},
+  html = { filetypes = { 'html', 'twig', 'hbs' } },
 
   lua_ls = {
     Lua = {
@@ -801,21 +835,21 @@ cmp.setup {
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
 
-
 -- My options
 vim.keymap.set('n', '<leader>J', '<C-o>')
 vim.keymap.set('n', '<leader>K', '<C-i>')
 
-vim.api.nvim_set_keymap("n", "J", ":m .+1<CR>==", { noremap = true, silent = true}) -- move line down(n)
-vim.api.nvim_set_keymap("n", "K", ":m .-2<CR>==", { noremap = true, silent = true}) -- move line up(n)
-vim.api.nvim_set_keymap("v", "J", ":m '>+1<CR>gv=gv", { noremap = true, silent = true}) -- move line down(v)
-vim.api.nvim_set_keymap("v", "K", ":m '<-2<CR>gv=gv", { noremap = true, silent = true}) -- move line down(v)
+vim.api.nvim_set_keymap('n', 'J', ':m .+1<CR>==', { noremap = true, silent = true })     -- move line down(n)
+vim.api.nvim_set_keymap('n', 'K', ':m .-2<CR>==', { noremap = true, silent = true })     -- move line up(n)
+vim.api.nvim_set_keymap('v', 'J', ":m '>+1<CR>gv=gv", { noremap = true, silent = true }) -- move line down(v)
+vim.api.nvim_set_keymap('v', 'K', ":m '<-2<CR>gv=gv", { noremap = true, silent = true }) -- move line down(v)
 
-vim.api.nvim_set_keymap('i', 'kj', '<Esc>', { noremap = true, silent = true });
-vim.api.nvim_set_keymap('n', 'ff', ':w<CR>', { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', "<leader>o", ':NvimTreeToggle<CR>', { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', "<leader>i", ':NvimTreeFocus<CR>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('i', 'kj', '<Esc>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<leader>o', ':NvimTreeToggle<CR>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<leader>i', ':NvimTreeFocus<CR>', { noremap = true, silent = true })
 
-vim.keymap.set("n", "<leader>v", function() require('Comment.api').toggle.linewise.current() end,
-  { noremap = true, silent = true })
-
+local function format_and_save()
+  vim.lsp.buf.format()
+  vim.cmd 'w'
+end
+vim.keymap.set('n', 'ff', format_and_save, { noremap = true, silent = true })
