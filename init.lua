@@ -338,6 +338,7 @@ require('lazy').setup({
               prompt_title = 'Harpoon',
               finder = require('telescope.finders').new_table {
                 results = file_paths,
+                disable_devicons = false,
               },
               previewer = conf.file_previewer {},
               sorter = conf.generic_sorter {},
@@ -409,6 +410,9 @@ require('lazy').setup({
         },
       }
     end,
+  },
+  {
+    'voldikss/vim-floaterm',
   },
 
   -- NOTE: Next Step on Your Neovim Journey: Add/Configure additional "plugins" for kickstart
@@ -853,3 +857,11 @@ local function format_and_save()
   vim.cmd 'w'
 end
 vim.keymap.set('n', 'ff', format_and_save, { noremap = true, silent = true })
+
+-- floaterm setup to work with laygit
+vim.api.nvim_set_keymap('n', '<leader>gi', ':FloatermNew --name=lazygit lazygit<CR>', { noremap = true, silent = true })
+vim.g.floaterm_width = 0.9
+vim.g.floaterm_height = 0.9
+vim.g.floaterm_wintype = 'float'
+vim.g.floaterm_position = 'center'
+vim.g.floaterm_borderchars = '─│─│╭╮╯╰'
