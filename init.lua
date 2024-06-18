@@ -277,6 +277,9 @@ require('lazy').setup({
         renderer = {
           group_empty = true,
         },
+        update_focused_file = {
+          enable = true,
+        },
         filters = {
           dotfiles = true,
         },
@@ -851,6 +854,7 @@ vim.api.nvim_set_keymap('v', 'K', ":m '<-2<CR>gv=gv", { noremap = true, silent =
 vim.api.nvim_set_keymap('i', 'kj', '<Esc>', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '<leader>o', ':NvimTreeToggle<CR>', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '<leader>i', ':NvimTreeFocus<CR>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<leader>p', ':NvimTreeCollapse<CR>', { noremap = true, silent = true })
 
 local function format_and_save()
   vim.lsp.buf.format()
