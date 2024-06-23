@@ -1,3 +1,7 @@
+# install lazygit https://github.com/jesseduffield/lazygit
+# setup config (this file) in correct path (path can be found here for different operating systems): https://github.com/jesseduffield/lazygit/blob/master/docs/Config.md
+# install delta for better git diff: https://github.com/dandavison/delta -> https://dandavison.github.io/delta/installation.html
+
 os:
   edit: '[[ -z "$NVIM" ]] && { nvim {{filename}} &>/dev/tty; true; } || { nvim -u NONE --server $NVIM --remote-expr "execute(\"FloatermToggle\")" && nvim -u NONE --server $NVIM --remote {{filename}}; }'
   editAtLine: '[[ -z "$NVIM" ]] && { nvim +{{line}} {{filename}} &>/dev/tty; true; } || { nvim -u NONE --server $NVIM --remote-expr "execute(\"FloatermToggle\")" && nvim -u NONE --server $NVIM --remote {{filename}} && nvim -u NONE --server $NVIM --remote-expr "execute(\"normal {{line}}gg\")"; }'
@@ -16,4 +20,4 @@ gui:
 git:
   paging:
     colorArg: never
-    pager: delta --dark --paging=never
+    pager: delta --dark --paging=never --side-by-side --line-numbers
