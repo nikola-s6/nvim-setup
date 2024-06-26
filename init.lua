@@ -923,4 +923,6 @@ vim.api.nvim_create_autocmd("FileType", {
 })
 
 -- set current line number color
-vim.api.nvim_set_hl(0, "LineNr", { fg = "#c678dd" })
+vim.api.nvim_set_hl(0, "LineNrAbove", { fg = "#5a5b5f", bold = true })
+vim.api.nvim_set_hl(0, "LineNr", { fg = "#c678dd", bold = true })
+vim.api.nvim_set_hl(0, "LineNrBelow", { fg = "#5a5b5f", bold = true })
