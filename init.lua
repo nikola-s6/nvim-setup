@@ -901,7 +901,12 @@ end
 vim.keymap.set("n", "ff", format_and_save, { noremap = true, silent = true })
 
 -- floaterm setup to work with laygit
-vim.api.nvim_set_keymap("n", "<leader>gi", ":FloatermNew --name=lazygit lazygit<CR>", { noremap = true, silent = true })
+vim.api.nvim_set_keymap(
+  "n",
+  "<leader>gi",
+  ":wall<CR> :FloatermNew --name=lazygit lazygit<CR>",
+  { noremap = true, silent = true }
+)
 vim.g.floaterm_width = 0.9
 vim.g.floaterm_height = 0.9
 vim.g.floaterm_wintype = "float"
@@ -917,7 +922,6 @@ vim.filetype.add({
 vim.api.nvim_create_autocmd("FileType", {
   pattern = "angular.html",
   callback = function()
-    print("nestoooooo")
     vim.treesitter.language.register("angular", "angular.html") -- Register the filetype with treesitter for the `angular` language/parser
   end,
 })
