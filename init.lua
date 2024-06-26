@@ -202,7 +202,7 @@ require('lazy').setup({
     config = function()
       require('onedark').setup {
         -- Set a style preset. 'dark' is default.
-        style = 'dark', -- dark, darker, cool, deep, warm, warmer, light
+        style = 'warmer', -- dark, darker, cool, deep, warm, warmer, light
       }
       require('onedark').load()
     end,
@@ -869,3 +869,16 @@ vim.g.floaterm_height = 0.9
 vim.g.floaterm_wintype = 'float'
 vim.g.floaterm_position = 'center'
 vim.g.floaterm_borderchars = '─│─│╭╮╯╰'
+
+vim.filetype.add {
+  pattern = {
+    ['.*%.component%.html'] = 'angular.html', -- Sets the filetype to angular.html if it matches the pattern
+  },
+}
+
+vim.api.nvim_create_autocmd('FileType', {
+  pattern = 'angular.html',
+  callback = function()
+    vim.treesitter.language.register('angular', 'angular.html') -- Register the filetype with treesitter for the angular language/parser
+  end,
+})
