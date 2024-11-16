@@ -206,20 +206,51 @@ require("lazy").setup({
     },
   },
 
+  -- {
+  --   -- Theme inspired by Atom
+  --   "navarasu/onedark.nvim",
+  --   priority = 1000,
+  --   lazy = false,
+  --   config = function()
+  --     require("onedark").setup({
+  --       -- Set a style preset. 'dark' is default.
+  --       style = "darker", -- dark, darker, cool, deep, warm, warmer, light
+  --     })
+  --     require("onedark").load()
+  --   end,
+  -- },
+  -- {
+  --   "tiagovla/tokyodark.nvim",
+  --   opts = {
+  --     -- custom options here
+  --   },
+  --   config = function(_, opts)
+  --     require("tokyodark").setup(opts) -- calling setup is optional
+  --     vim.cmd([[colorscheme tokyodark]])
+  --   end,
+  -- },
+
   {
-    -- Theme inspired by Atom
-    "navarasu/onedark.nvim",
-    priority = 1000,
-    lazy = false,
+    "projekt0n/github-nvim-theme",
+    name = "github-theme",
+    lazy = false,  -- make sure we load this during startup if it is your main colorscheme
+    priority = 1000, -- make sure to load this before all the other start plugins
     config = function()
-      require("onedark").setup({
-        -- Set a style preset. 'dark' is default.
-        style = "darker", -- dark, darker, cool, deep, warm, warmer, light
+      require("github-theme").setup({
+        options = {
+          styles = {
+            comments = "underline,italic",
+            functions = "italic",
+            variables = "NONE",
+            constants = "italic",
+            types = "italic",
+          },
+        },
       })
-      require("onedark").load()
+
+      vim.cmd("colorscheme github_dark_default")
     end,
   },
-
   {
     -- Set lualine as statusline
     "nvim-lualine/lualine.nvim",
@@ -945,5 +976,11 @@ vim.api.nvim_set_hl(0, "LineNrBelow", { fg = "#5a5b5f", bold = true })
 vim.opt.spelllang = "en_us"
 vim.opt.spell = false
 
--- fat cursos
-vim.opt.guicursor = "n-v-c-sm-i-ci-ve:block,r-cr-o:hor20"
+-- fat cursos with purple color when in isert mode
+vim.opt.guicursor = "n-v-c-sm:block-Cursor/lCursor,i-ci-ve:block-CursorInsert/lCursorInsert,r-cr-o:hor20"
+
+-- Define cursor appearance for specific modes
+vim.cmd([[
+    highlight Cursor guibg=#FFFFFF guifg=#000000
+    highlight CursorInsert guibg=#c678dd guifg=#FFFFFF
+]])
