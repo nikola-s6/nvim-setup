@@ -214,7 +214,7 @@ require("lazy").setup({
     config = function()
       require("onedark").setup({
         -- Set a style preset. 'dark' is default.
-        style = "warmer", -- dark, darker, cool, deep, warm, warmer, light
+        style = "darker", -- dark, darker, cool, deep, warm, warmer, light
       })
       require("onedark").load()
     end,
@@ -285,7 +285,7 @@ require("lazy").setup({
     },
     config = function()
       require("nvim-tree").setup({
-        view = { relativenumber = true, width = 30 },
+        view = { relativenumber = false, width = 30 },
         renderer = {
           group_empty = true,
         },
@@ -295,7 +295,6 @@ require("lazy").setup({
         filters = {
           dotfiles = true,
         },
-        view = { relativenumber = false },
         on_attach = function(bufnr)
           local api = require("nvim-tree.api")
 
@@ -504,8 +503,12 @@ vim.keymap.set("n", "k", "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = tr
 vim.keymap.set("n", "j", "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
 
 -- Diagnostic keymaps
-vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, { desc = "Go to previous diagnostic message" })
-vim.keymap.set("n", "]d", vim.diagnostic.goto_next, { desc = "Go to next diagnostic message" })
+vim.keymap.set("n", "[d", function()
+  vim.diagnostic.jump({ count = -1, float = true })
+end, { desc = "Go to previous diagnostic message" })
+vim.keymap.set("n", "]d", function()
+  vim.diagnostic.jump({ count = 1, float = true })
+end, { desc = "Go to next diagnostic message" })
 vim.keymap.set("n", "<leader>e", vim.diagnostic.open_float, { desc = "Open floating diagnostic message" })
 vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, { desc = "Open diagnostics list" })
 
@@ -714,7 +717,7 @@ local on_attach = function(_, bufnr)
 
   nmap("<leader>rn", vim.lsp.buf.rename, "[R]e[n]ame")
   nmap("<leader>ca", function()
-    vim.lsp.buf.code_action({ context = { only = { "quickfix", "refactor", "source" } } })
+    vim.lsp.buf.code_action({ context = { only = { "quickfix", "refactor", "source" }, diagnostics = {} } })
   end, "[C]ode [A]ction")
 
   nmap("gd", require("telescope.builtin").lsp_definitions, "[G]oto [D]efinition")
@@ -752,22 +755,30 @@ local on_attach = function(_, bufnr)
 end
 
 -- document existing key chains
-require("which-key").register({
-  ["<leader>c"] = { name = "[C]ode", _ = "which_key_ignore" },
-  ["<leader>d"] = { name = "[D]ocument", _ = "which_key_ignore" },
-  ["<leader>g"] = { name = "[G]it", _ = "which_key_ignore" },
-  ["<leader>h"] = { name = "Git [H]unk", _ = "which_key_ignore" },
-  ["<leader>r"] = { name = "[R]ename", _ = "which_key_ignore" },
-  ["<leader>s"] = { name = "[S]earch", _ = "which_key_ignore" },
-  ["<leader>t"] = { name = "[T]oggle", _ = "which_key_ignore" },
-  ["<leader>w"] = { name = "[W]orkspace", _ = "which_key_ignore" },
+require("which-key").add({
+  { "<leader>c",  group = "[C]ode" },
+  { "<leader>c_", hidden = true },
+  { "<leader>d",  group = "[D]ocument" },
+  { "<leader>d_", hidden = true },
+  { "<leader>g",  group = "[G]it" },
+  { "<leader>g_", hidden = true },
+  { "<leader>h",  group = "Git [H]unk" },
+  { "<leader>h_", hidden = true },
+  { "<leader>r",  group = "[R]ename" },
+  { "<leader>r_", hidden = true },
+  { "<leader>s",  group = "[S]earch" },
+  { "<leader>s_", hidden = true },
+  { "<leader>t",  group = "[T]oggle" },
+  { "<leader>t_", hidden = true },
+  { "<leader>w",  group = "[W]orkspace" },
+  { "<leader>w_", hidden = true },
 })
 -- register which-key VISUAL mode
 -- required for visual <leader>hs (hunk stage) to work
-require("which-key").register({
-  ["<leader>"] = { name = "VISUAL <leader>" },
-  ["<leader>h"] = { "Git [H]unk" },
-}, { mode = "v" })
+require("which-key").add({
+  { "<leader>",  group = "VISUAL <leader>", mode = "v" },
+  { "<leader>h", desc = "Git [H]unk",       mode = "v" },
+})
 
 -- mason-lspconfig requires that these setup functions are called in this order
 -- before setting up the servers.
@@ -787,7 +798,7 @@ local servers = {
   gopls = {},
   -- pyright = {},
   -- rust_analyzer = {},
-  tsserver = {},
+  ts_ls = {},
   html = { filetypes = { "html", "twig", "hbs" } },
 
   lua_ls = {
@@ -846,7 +857,7 @@ cmp.setup({
     ["<C-p>"] = cmp.mapping.select_prev_item(),
     ["<C-b>"] = cmp.mapping.scroll_docs(-4),
     ["<C-f>"] = cmp.mapping.scroll_docs(4),
-    ["<S-Space>"] = cmp.mapping.complete({}),
+    ["<C-Space>"] = cmp.mapping.complete({}),
     ["<CR>"] = cmp.mapping.confirm({
       behavior = cmp.ConfirmBehavior.Replace,
       select = true,
@@ -932,4 +943,7 @@ vim.api.nvim_set_hl(0, "LineNr", { fg = "#c678dd", bold = true })
 vim.api.nvim_set_hl(0, "LineNrBelow", { fg = "#5a5b5f", bold = true })
 
 vim.opt.spelllang = "en_us"
-vim.opt.spell = true
+vim.opt.spell = false
+
+-- fat cursos
+vim.opt.guicursor = "n-v-c-sm-i-ci-ve:block,r-cr-o:hor20"
