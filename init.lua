@@ -974,3 +974,8 @@ vim.cmd([[
     highlight Cursor guibg=#FFFFFF guifg=#000000
     highlight CursorInsert guibg=#c678dd guifg=#FFFFFF
 ]])
+
+-- delete command line for larger screen size and remove empty gap at the bottom
+vim.opt.cmdheight = 0
+-- used to see recent messages
+vim.keymap.set("n", "<leader>m", ":messages<CR>", { noremap = true, silent = true })
