@@ -54,7 +54,7 @@ vim.opt.splitbelow = true
 --  See `:help 'list'`
 --  and `:help 'listchars'`
 vim.opt.list = true
-vim.opt.listchars = { tab = "» ", trail = "·", nbsp = "␣" }
+vim.opt.listchars = { tab = "▏ ", trail = "·", nbsp = "␣" }
 
 -- Preview substitutions live, as you type!
 vim.opt.inccommand = "split"
@@ -840,17 +840,17 @@ require("lazy").setup({
 			-- Simple and easy statusline.
 			--  You could remove this setup call if you don't like it,
 			--  and try some other statusline plugin
-			local statusline = require("mini.statusline")
+			-- local statusline = require("mini.statusline")
 			-- set use_icons to true if you have a Nerd Font
-			statusline.setup({ use_icons = vim.g.have_nerd_font })
+			-- statusline.setup({ use_icons = vim.g.have_nerd_font })
 
 			-- You can configure sections in the statusline by overriding their
 			-- default behavior. For example, here we set the section for
 			-- cursor location to LINE:COLUMN
-			---@diagnostic disable-next-line: duplicate-set-field
-			statusline.section_location = function()
-				return "%2l:%-2v"
-			end
+			-- ---@diagnostic disable-next-line: duplicate-set-field
+			-- statusline.section_location = function()
+			-- 	return "%2l:%-2v"
+			-- end
 
 			-- ... and there is more!
 			--  Check out: https://github.com/echasnovski/mini.nvim
@@ -903,12 +903,14 @@ require("lazy").setup({
 	--  Here are some example plugins that I've included in the Kickstart repository.
 	--  Uncomment any of the lines below to enable them (you will need to restart nvim).
 	--
-	-- require 'kickstart.plugins.debug',
-	-- require 'kickstart.plugins.indent_line',
+	require("kickstart.plugins.debug"),
+	-- require("kickstart.plugins.indent_line"),
 	-- require 'kickstart.plugins.lint',
 	require("kickstart.plugins.autopairs"),
 	require("kickstart.plugins.neo-tree"),
 	require("kickstart.plugins.gitsigns"), -- adds gitsigns recommend keymaps
+	-- Custom
+	require("kickstart.plugins.lualine"),
 
 	-- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
 	--    This is the easiest way to modularize your config.
@@ -924,6 +926,11 @@ require("lazy").setup({
 	--
 	--
 	-- Custom:
+	{
+		"pmizio/typescript-tools.nvim",
+		dependencies = { "nvim-lua/plenary.nvim", "neovim/nvim-lspconfig" },
+		opts = {},
+	},
 	{
 		"voldikss/vim-floaterm",
 	},
@@ -1026,3 +1033,8 @@ vim.g.floaterm_borderchars = "─│─│╭╮╯╰"
 vim.api.nvim_create_autocmd("VimEnter", {
 	command = "set nornu nonu | Neotree toggle",
 })
+
+-- delete command line for larger screen size and remove empty gap at the bottom
+vim.opt.cmdheight = 0
+-- used to see recent messages
+vim.keymap.set("n", "<leader>m", ":messages<CR>", { noremap = true, silent = true })
