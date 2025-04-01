@@ -79,6 +79,7 @@ vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>")
 
 -- Diagnostic keymaps
 vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, { desc = "Open diagnostic [Q]uickfix list" })
+vim.keymap.set("n", "<leader>e", vim.diagnostic.open_float, { desc = "Open floating diagnostic message" })
 
 -- Exit terminal mode in the builtin terminal with a shortcut that is a bit easier
 -- for people to discover. Otherwise, you normally need to press <C-\><C-n>, which
@@ -447,6 +448,10 @@ require("lazy").setup({
 					-- WARN: This is not Goto Definition, this is Goto Declaration.
 					--  For example, in C this would take you to the header.
 					map("gD", vim.lsp.buf.declaration, "[G]oto [D]eclaration")
+
+					-- Custom:
+					map("<leader>k", vim.lsp.buf.hover, "Hover documentation", "n")
+					map("<C-k>", vim.lsp.buf.signature_help, "Signature help", "i")
 
 					-- This function resolves a difference between neovim nightly (version 0.11) and stable (version 0.10)
 					---@param client vim.lsp.Client
@@ -1030,11 +1035,17 @@ vim.g.floaterm_position = "center"
 vim.g.floaterm_borderchars = "─│─│╭╮╯╰"
 
 -- open neotree on startup
+-- vim.api.nvim_create_autocmd("VimEnter", {
+-- 	command = "set nornu nonu | Neotree toggle",
+-- })
 vim.api.nvim_create_autocmd("VimEnter", {
-	command = "set nornu nonu | Neotree toggle",
+	command = "Neotree toggle",
 })
 
 -- delete command line for larger screen size and remove empty gap at the bottom
 vim.opt.cmdheight = 0
 -- used to see recent messages
 vim.keymap.set("n", "<leader>m", ":messages<CR>", { noremap = true, silent = true })
+
+vim.opt.tabstop = 2
+-- vim.opt.expandtab = true
