@@ -916,6 +916,7 @@ require("lazy").setup({
 	require("kickstart.plugins.gitsigns"), -- adds gitsigns recommend keymaps
 	-- Custom
 	require("kickstart.plugins.lualine"),
+	require("kickstart.plugins.harpoon"),
 
 	-- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
 	--    This is the easiest way to modularize your config.
@@ -1047,5 +1048,40 @@ vim.opt.cmdheight = 0
 -- used to see recent messages
 vim.keymap.set("n", "<leader>m", ":messages<CR>", { noremap = true, silent = true })
 
-vim.opt.tabstop = 2
--- vim.opt.expandtab = true
+-- harpoon
+local harpoon = require("harpoon")
+harpoon:setup()
+
+vim.keymap.set("n", "<leader>a", function()
+	harpoon:list():add()
+end, { desc = "Harpoon add to list" })
+vim.keymap.set("n", "<leader>d", function()
+	harpoon:list():remove()
+end, { desc = "Harpoon remove from list" })
+vim.keymap.set("n", "<leader>f", function()
+	harpoon.ui:toggle_quick_menu(harpoon:list())
+end, { desc = "Harpoon show list" })
+vim.keymap.set("n", "<leader>1", function()
+	harpoon:list():select(1)
+end, { desc = "Harpoon first file" })
+vim.keymap.set("n", "<leader>2", function()
+	harpoon:list():select(2)
+end, { desc = "Harpoon second file" })
+vim.keymap.set("n", "<leader>3", function()
+	harpoon:list():select(3)
+end, { desc = "Harpoon third file" })
+vim.keymap.set("n", "<leader>4", function()
+	harpoon:list():select(4)
+end, { desc = "Harpoon fourth file" })
+vim.keymap.set("n", "H", function()
+	harpoon:list():prev()
+end)
+vim.keymap.set("n", "L", function()
+	harpoon:list():next()
+end)
+
+vim.opt.tabstop = 2 -- Number of spaces a tab counts for
+vim.opt.shiftwidth = 2 -- Number of spaces to use for autoindent
+vim.opt.expandtab = true -- Use spaces instead of tabs
+vim.opt.smartindent = true -- Enable smart indentation
+vim.opt.showtabline = 0 -- ignore tabs at the topim.opt.expandtab = true
