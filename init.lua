@@ -571,6 +571,9 @@ require("lazy").setup({
 			local servers = {
 				-- clangd = {},
 				gopls = {},
+				emmet_language_server = {
+					showexpandedabbreviation = "always",
+				},
 				-- pyright = {},
 				-- rust_analyzer = {},
 				-- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
@@ -903,6 +906,12 @@ require("lazy").setup({
 		--    - Incremental selection: Included, see `:help nvim-treesitter-incremental-selection-mod`
 		--    - Show your current context: https://github.com/nvim-treesitter/nvim-treesitter-context
 		--    - Treesitter + textobjects: https://github.com/nvim-treesitter/nvim-treesitter-textobjects
+	},
+	{
+		"olrtg/nvim-emmet",
+		config = function()
+			vim.keymap.set({ "n", "v" }, "<leader>xe", require("nvim-emmet").wrap_with_abbreviation)
+		end,
 	},
 
 	-- The following comments only work if you have downloaded the kickstart repo, not just copy pasted the
