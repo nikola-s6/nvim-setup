@@ -53,8 +53,8 @@ vim.opt.splitbelow = true
 -- Sets how neovim will display certain whitespace characters in the editor.
 --  See `:help 'list'`
 --  and `:help 'listchars'`
-vim.opt.list = true
-vim.opt.listchars = { tab = "▏ ", trail = "·", nbsp = "␣" }
+vim.opt.list = false
+-- vim.opt.listchars = { tab = "▏ ", trail = "·", nbsp = "␣" }
 
 -- Preview substitutions live, as you type!
 vim.opt.inccommand = "split"
@@ -140,7 +140,7 @@ vim.opt.rtp:prepend(lazypath)
 -- NOTE: Here is where you install your plugins.
 require("lazy").setup({
 	-- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
-	"tpope/vim-sleuth", -- Detect tabstop and shiftwidth automatically
+	-- "tpope/vim-sleuth", -- Detect tabstop and shiftwidth automatically
 
 	-- NOTE: Plugins can also be added by using a table,
 	-- with the first argument being the link and the following
@@ -659,7 +659,7 @@ require("lazy").setup({
 					return nil
 				else
 					return {
-						timeout_ms = 500,
+						timeout_ms = 2000,
 						lsp_format = "fallback",
 					}
 				end
@@ -670,7 +670,13 @@ require("lazy").setup({
 				-- python = { "isort", "black" },
 				--
 				-- You can use 'stop_after_first' to run the first available formatter from the list
-				-- javascript = { "prettierd", "prettier", stop_after_first = true },
+				javascript = { "prettierd", "prettier", stop_after_first = true },
+				typescript = { "prettierd", "prettier", stop_after_first = true },
+			},
+		},
+		formatterss = {
+			prettierd = {
+				prepend_args = { "--stdin-filepath", "$FILENAME" },
 			},
 		},
 	},
@@ -909,7 +915,7 @@ require("lazy").setup({
 	--  Uncomment any of the lines below to enable them (you will need to restart nvim).
 	--
 	require("kickstart.plugins.debug"),
-	-- require("kickstart.plugins.indent_line"),
+	require("kickstart.plugins.indent_line"),
 	-- require 'kickstart.plugins.lint',
 	require("kickstart.plugins.autopairs"),
 	require("kickstart.plugins.neo-tree"),
@@ -917,6 +923,7 @@ require("lazy").setup({
 	-- Custom
 	require("kickstart.plugins.lualine"),
 	require("kickstart.plugins.harpoon"),
+	require("kickstart.plugins.markdown-preview"),
 
 	-- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
 	--    This is the easiest way to modularize your config.
@@ -998,9 +1005,6 @@ require("lazy").setup({
 --
 -- Custom:
 
-vim.keymap.set("n", "<leader>J", "<C-o>", { desc = "Previous buffer" })
-vim.keymap.set("n", "<leader>K", "<C-i>", { desc = "Next buffer" })
-
 vim.keymap.set("n", "ff", ":w<CR>", { desc = "Save file" })
 vim.api.nvim_set_keymap("i", "kj", "<Esc>", { noremap = true, silent = true })
 
@@ -1029,8 +1033,8 @@ vim.api.nvim_set_keymap(
 	":wall<CR> :FloatermNew --name=lazygit lazygit<CR>",
 	{ noremap = true, silent = true }
 )
-vim.g.floaterm_width = 0.9
-vim.g.floaterm_height = 0.9
+vim.g.floaterm_width = 0.99
+vim.g.floaterm_height = 0.99
 vim.g.floaterm_wintype = "float"
 vim.g.floaterm_position = "center"
 vim.g.floaterm_borderchars = "─│─│╭╮╯╰"
@@ -1058,7 +1062,7 @@ end, { desc = "Harpoon add to list" })
 vim.keymap.set("n", "<leader>d", function()
 	harpoon:list():remove()
 end, { desc = "Harpoon remove from list" })
-vim.keymap.set("n", "<leader>f", function()
+vim.keymap.set("n", "<leader>p", function()
 	harpoon.ui:toggle_quick_menu(harpoon:list())
 end, { desc = "Harpoon show list" })
 vim.keymap.set("n", "<leader>1", function()
