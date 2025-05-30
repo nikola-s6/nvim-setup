@@ -949,6 +949,10 @@ require("lazy").setup({
 	--
 	-- Custom:
 	{
+		"sindrets/diffview.nvim",
+		dependencies = "nvim-lua/plenary.nvim",
+	},
+	{
 		"pmizio/typescript-tools.nvim",
 		dependencies = { "nvim-lua/plenary.nvim", "neovim/nvim-lspconfig" },
 		opts = {},
@@ -1098,3 +1102,7 @@ vim.opt.shiftwidth = 2 -- Number of spaces to use for autoindent
 vim.opt.expandtab = true -- Use spaces instead of tabs
 vim.opt.smartindent = true -- Enable smart indentation
 vim.opt.showtabline = 0 -- ignore tabs at the topim.opt.expandtab = true
+
+-- Set up keybindings for diffview
+vim.keymap.set("n", "<leader>hd", ":DiffviewOpen<CR>", { desc = "Open Diffview" })
+vim.keymap.set("n", "<leader>hD", ":DiffviewClose<CR>", { desc = "Close Diffview" })
