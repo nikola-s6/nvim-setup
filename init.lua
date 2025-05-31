@@ -1106,3 +1106,15 @@ vim.opt.showtabline = 0 -- ignore tabs at the topim.opt.expandtab = true
 -- Set up keybindings for diffview
 vim.keymap.set("n", "<leader>hd", ":DiffviewOpen<CR>", { desc = "Open Diffview" })
 vim.keymap.set("n", "<leader>hD", ":DiffviewClose<CR>", { desc = "Close Diffview" })
+
+-- Project wide search and replace with confirmation
+vim.keymap.set("n", "<leader>rr", function()
+	local search = vim.fn.input("Search for: ")
+	if search == "" then
+		return
+	end
+	local replace = vim.fn.input("Replace with: ")
+	vim.cmd(":vimgrep /" .. search .. "/gj **/*") -- Search all files
+	vim.cmd(":copen") -- Open Quickfix list
+	vim.cmd(":cfdo %s/" .. search .. "/" .. replace .. "/gc | update") -- Replace with confirmation
+end, { desc = "Interactive project-wide search & replace" })
