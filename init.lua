@@ -989,6 +989,12 @@ require("lazy").setup({
 			})
 		end,
 	},
+	{
+		"karb94/neoscroll.nvim",
+		opts = {
+			duration_multiplier = 0.5,
+		},
+	},
 }, {
 
 	ui = {
@@ -1110,11 +1116,42 @@ vim.keymap.set("n", "<leader>hD", ":DiffviewClose<CR>", { desc = "Close Diffview
 -- Project wide search and replace with confirmation
 vim.keymap.set("n", "<leader>rr", function()
 	local search = vim.fn.input("Search for: ")
+	local filePattern = vim.fn.input("File pattern:")
 	if search == "" then
 		return
 	end
 	local replace = vim.fn.input("Replace with: ")
-	vim.cmd(":vimgrep /" .. search .. "/gj **/*") -- Search all files
+	vim.cmd(":vimgrep /" .. search .. "/gj **/" .. filePattern) -- Search all files
 	vim.cmd(":copen") -- Open Quickfix list
 	vim.cmd(":cfdo %s/" .. search .. "/" .. replace .. "/gc | update") -- Replace with confirmation
 end, { desc = "Interactive project-wide search & replace" })
+
+-- Delete entries by their QUICKFIX LIST line numbers (e.g., :CopDel 3,5,7)
+vim.api.nvim_create_user_command("Qfd", function(opts)
+	local args = opts.args
+	if args == "" then
+		print("Usage: :Qfd <line1>,<line2>,... (e.g., :CopDel 3,5,7)")
+		return
+	end
+
+	-- Parse input (e.g., "3,5,7" → {3, 5, 7})
+	local lines_to_delete = {}
+	for num in string.gmatch(args, "(%d+)") do
+		table.insert(lines_to_delete, tonumber(num))
+	end
+
+	-- Get current quickfix list
+	local qf_list = vim.fn.getqflist()
+
+	-- Filter out entries at the specified QUICKFIX LIST lines
+	local new_qf = {}
+	for i, item in ipairs(qf_list) do
+		if not vim.tbl_contains(lines_to_delete, i) then
+			table.insert(new_qf, item)
+		end
+	end
+
+	-- Update quickfix list (and preserve cursor position)
+	vim.fn.setqflist({}, "r", { items = new_qf })
+	print(string.format("Removed quickfix lines: %s", args))
+end, { nargs = "?", desc = "Delete quickfix entries by their list position" })
