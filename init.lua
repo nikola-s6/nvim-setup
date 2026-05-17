@@ -575,7 +575,7 @@ require("lazy").setup({
 					showexpandedabbreviation = "always",
 				},
 				-- pyright = {},
-				-- rust_analyzer = {},
+				rust_analyzer = {},
 				-- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
 				--
 				-- Some languages (like typescript) have entire language plugins that can be useful:
@@ -598,6 +598,16 @@ require("lazy").setup({
 							-- diagnostics = { disable = { 'missing-fields' } },
 						},
 					},
+				},
+
+				-- htmx LSP - provides completion and validation for htmx attributes
+				htmx = {
+					filetypes = { "html", "templ" },
+				},
+
+				-- templ LSP - for Go's templ templating language
+				templ = {
+					filetypes = { "templ" },
 				},
 			}
 
@@ -674,12 +684,19 @@ require("lazy").setup({
 				--
 				-- You can use 'stop_after_first' to run the first available formatter from the list
 				javascript = { "prettierd", "prettier", stop_after_first = true },
+				javascriptreact = { "prettierd", "prettier", stop_after_first = true },
 				typescript = { "prettierd", "prettier", stop_after_first = true },
-			},
-		},
-		formatterss = {
-			prettierd = {
-				prepend_args = { "--stdin-filepath", "$FILENAME" },
+				typescriptreact = { "prettierd", "prettier", stop_after_first = true },
+				json = { "prettierd", "prettier", stop_after_first = true },
+				jsonc = { "prettierd", "prettier", stop_after_first = true },
+				css = { "prettierd", "prettier", stop_after_first = true },
+				scss = { "prettierd", "prettier", stop_after_first = true },
+				html = { "prettierd", "prettier", stop_after_first = true },
+				markdown = { "prettierd", "prettier", stop_after_first = true },
+				yaml = { "prettierd", "prettier", stop_after_first = true },
+				graphql = { "prettierd", "prettier", stop_after_first = true },
+				vue = { "prettierd", "prettier", stop_after_first = true },
+				svelte = { "prettierd", "prettier", stop_after_first = true },
 			},
 		},
 	},
@@ -1023,6 +1040,13 @@ require("lazy").setup({
 --
 --
 -- Custom:
+
+-- Set up filetype detection for templ files
+vim.filetype.add({
+	extension = {
+		templ = "templ",
+	},
+})
 
 vim.keymap.set("n", "ff", ":w<CR>", { desc = "Save file" })
 vim.api.nvim_set_keymap("i", "kj", "<Esc>", { noremap = true, silent = true })
