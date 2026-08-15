@@ -7,6 +7,10 @@ vim.g.maplocalleader = " "
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
 
+-- OSC 52 clipboard, so yanks reach the host clipboard through tmux/SSH.
+-- No-op outside tmux/SSH sessions. (Taken from Omarchy.)
+require("config.remote_clipboard").setup()
+
 -- Set to true if you have a Nerd Font installed and selected in the terminal
 vim.g.have_nerd_font = true
 
@@ -104,6 +108,12 @@ vim.keymap.set("n", "<C-l>", "<C-w><C-l>", { desc = "Move focus to the right win
 vim.keymap.set("n", "<C-j>", "<C-w><C-j>", { desc = "Move focus to the lower window" })
 vim.keymap.set("n", "<C-k>", "<C-w><C-k>", { desc = "Move focus to the upper window" })
 
+-- Resize splits with CTRL+<arrows> (e.g. widen/narrow the neo-tree sidebar)
+vim.keymap.set("n", "<C-Up>", "<cmd>resize +2<cr>", { desc = "Increase window height" })
+vim.keymap.set("n", "<C-Down>", "<cmd>resize -2<cr>", { desc = "Decrease window height" })
+vim.keymap.set("n", "<C-Left>", "<cmd>vertical resize -2<cr>", { desc = "Decrease window width" })
+vim.keymap.set("n", "<C-Right>", "<cmd>vertical resize +2<cr>", { desc = "Increase window width" })
+
 -- Highlight when yanking (copying) text
 --  Try it with `yap` in normal mode
 --  See `:help vim.highlight.on_yank()`
@@ -111,7 +121,8 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 	desc = "Highlight when yanking (copying) text",
 	group = vim.api.nvim_create_augroup("kickstart-highlight-yank", { clear = true }),
 	callback = function()
-		vim.highlight.on_yank()
+		-- vim.highlight was renamed to vim.hl in nvim 0.11
+		(vim.hl or vim.highlight).on_yank()
 	end,
 })
 
@@ -763,10 +774,9 @@ require("lazy").setup({
 				},
 			})
 
-			-- Load the colorscheme here.
-			-- Like many other themes, this one has different styles, and you could load
-			-- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
-			vim.cmd.colorscheme("tokyonight-night")
+			-- NOTE: the colorscheme is applied by lua/omarchy/theme.lua, which follows
+			-- the current Omarchy theme and falls back to tokyonight-night when there
+			-- is no Omarchy theme on this machine.
 		end,
 	},
 
@@ -951,7 +961,16 @@ require("lazy").setup({
 			duration_multiplier = 0.5,
 		},
 	},
+
+	-- Everything under lua/plugins/. Importing it as a module (rather than
+	-- require()ing the files) is what lets lazy.nvim's reloader watch
+	-- lua/plugins/theme.lua and pick up Omarchy theme changes live.
+	{ import = "plugins" },
 }, {
+	change_detection = {
+		-- The Omarchy theme symlink changes on every theme switch; don't announce it.
+		notify = false,
+	},
 
 	ui = {
 		-- If you are using a Nerd Font: set icons to an empty table which will use the
