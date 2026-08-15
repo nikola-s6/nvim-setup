@@ -1,0 +1,5 @@
+# Machine-local symlink to the current Omarchy theme spec, created by install.sh
+lua/plugins/theme.lua
+
+# Logs / scratch
+*.log
