@@ -34,6 +34,15 @@ return {
       enabled = false,
     },
 
+    -- notify() is a separate mechanism from `messages` above - noice
+    -- otherwise still hijacks vim.notify() into its own floating,
+    -- auto-dismissing popup regardless of the messages setting. Disabling
+    -- it here lets vim.notify() fall through to plain :messages too (no
+    -- popup at all, since Snacks' notifier is also off).
+    notify = {
+      enabled = false,
+    },
+
     -- Only repositions the popup cmdline, which is no longer used.
     presets = {
       command_palette = false,

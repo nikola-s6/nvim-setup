@@ -20,3 +20,8 @@ vim.keymap.set("n", "ff", function()
   LazyVim.format({ force = true })
   vim.cmd("write")
 end, { desc = "Format and save" })
+
+-- <leader>m: see recent messages in full - cmdheight stays at 1 (no
+-- permanently reserved space), so a multi-line message only shows its
+-- last line live; this opens the full history on demand instead.
+vim.keymap.set("n", "<leader>m", "<cmd>messages<cr>", { desc = "Show messages" })
