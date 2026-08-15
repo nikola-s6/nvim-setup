@@ -1,0 +1,2 @@
+# Omarchy owns this file (symlink into ~/.local/state/omarchy); never reformat it.
+lua/plugins/theme.lua

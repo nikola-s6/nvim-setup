@@ -7,16 +7,16 @@
 -- and we read the colorscheme out of the file ourselves.
 
 return {
-  { "LazyVim/LazyVim", enabled = false },
+	{ "LazyVim/LazyVim", enabled = false },
 
-  {
-    "omarchy-theme",
-    dir = vim.fn.stdpath("config"),
-    name = "omarchy-theme",
-    lazy = false,
-    priority = 1000,
-    config = function()
-      require("omarchy.theme").setup()
-    end,
-  },
+	{
+		"omarchy-theme",
+		dir = vim.fn.stdpath("config"),
+		name = "omarchy-theme",
+		lazy = false,
+		priority = 1000,
+		config = function()
+			require("omarchy.theme").setup()
+		end,
+	},
 }
