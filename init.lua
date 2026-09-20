@@ -611,6 +611,10 @@ require("lazy").setup({
 				},
 
 				tailwindcss = {},
+
+				-- eslint LSP: attaches only when the project has an eslint config,
+				-- so it's silent in projects without one.
+				eslint = {},
 			}
 
 			-- Ensure the servers and tools above are installed
