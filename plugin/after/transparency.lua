@@ -1,4 +1,11 @@
 -- Make highlight groups transparent while preserving their other attributes
+--
+-- Omarchy-only: it pairs with the transparent terminal there. On macOS the
+-- terminal is opaque, so skip it and keep the theme's own background.
+if vim.fn.has("mac") == 1 then
+	return
+end
+
 local function make_transparent(name)
 	local ok, hl = pcall(vim.api.nvim_get_hl, 0, { name = name, link = false })
 	if ok then

@@ -2,6 +2,8 @@ return {
 	{
 		name = "theme-hotreload",
 		dir = vim.fn.stdpath("config"),
+		-- Only Omarchy (Linux) swaps the theme file at runtime; nothing to reload on macOS.
+		enabled = vim.fn.has("mac") == 0,
 		lazy = false,
 		priority = 1000,
 		config = function()
